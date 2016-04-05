@@ -111,7 +111,9 @@ static void writeReset(int fd)
   ret = ioctl(fd, SPI_IOC_MESSAGE(1), &tr);
   if (ret < 1) {
     printf("\nerr=%d when trying to reset. \n",ret);
-    pabort("Can't send spi message");
+    abort();
+
+    
   }
 }
 
@@ -130,8 +132,11 @@ static void writeReg(int fd, uint8_t v)
   tr.len = sizeof(tx1);
 
   ret = ioctl(fd, SPI_IOC_MESSAGE(1), &tr);
-  if (ret < 1)
-    pabort("can't send spi message");
+  if (ret < 1){
+    printf("\nerr=%d when trying to write reg. \n",ret);
+    abort();
+  }
+	
 }
 
 static uint8_t readReg(int fd)
@@ -148,8 +153,11 @@ static uint8_t readReg(int fd)
 	tr.len = sizeof(tx1);
 
 	ret = ioctl(fd, SPI_IOC_MESSAGE(1), &tr);
-	if (ret < 1)
-	  pabort("can't send spi message");
+	if (ret < 1){
+	 printf("\nerr=%d when trying to read reg. \n",ret);
+	 abort();
+		
+	}
 	  
 	return rx1[0];
 }
@@ -167,11 +175,11 @@ static int readData(int fd)
 	tr.len = sizeof(tx1);
 
 	ret = ioctl(fd, SPI_IOC_MESSAGE(1), &tr);
-	if (ret < 1)
-          {
-	  printf("\n can't send spi message, ret = %d\n",ret);
-          exit(1);
-          }
+	if (ret < 1){
+		printf("\nerr=%d when trying to write reg. \n",ret);
+		abort();
+		
+	}
 	  
 	return (rx1[0]<<8)|(rx1[1]);
 }
